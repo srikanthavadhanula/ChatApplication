@@ -2,7 +2,6 @@ import './App.css';
 import { io } from 'socket.io-client';
 import { useEffect, useRef , useState } from 'react';
 import { Chat } from './components/Chat';
-import logo from "./assets/chat.png";
 import rc from './assets/rc.PNG';
 
 const socket = io(`https://random-chat-application.herokuapp.com/`);
