@@ -3,6 +3,7 @@ import { io } from 'socket.io-client';
 import { useEffect, useRef , useState } from 'react';
 import { Chat } from './components/Chat';
 import logo from "./assets/chat.png";
+import rc from './assets/rc.PNG';
 
 const socket = io(`http://localhost:7000`);
 function App() {
@@ -17,6 +18,7 @@ function App() {
 
   const [users, setUsers] = useState({});
   const [server, setServer] = useState({});
+  const [media, setMedia] = useState(null);
 
   const updateName = (e) => {
     e.preventDefault();
@@ -47,7 +49,7 @@ function App() {
 
   const createUser = (e) => {
     e.preventDefault();
-    if (state.name in users) {
+    if (state.name in users | state.name === "") {
       setState({
         ...state,
         unique: false,
@@ -77,6 +79,7 @@ function App() {
       sender: state.name,
       receiver: state.friend,
       message: state.message,
+      media: media,
       view: false,
     }
 
@@ -96,7 +99,11 @@ function App() {
     setState({
       ...state,
       message: "",
-    })
+    });
+
+    if (media !== null) {
+      setMedia(null);
+    }
   };
 
   const sortName = (sender, receiver) => {
@@ -160,11 +167,28 @@ function App() {
     return unseenMessages.length;
   };
 
+
+  const gotoBottom = () => {
+    const el = document.querySelector(".message-area ul");
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  };
+
+  useEffect(() => {
+    const key = sortName(state.name, state.friend);
+    if (key in server) {
+      if (server[key].length > 0) {
+        gotoBottom();
+      }
+    }
+  }, [server]);
+
   return (
     <div className="App">
       <header className="app-header">
-        <img src={logo} alt="" />
-        <div className="app-name b-500 primaryColor">My Chat</div>
+        <img className="logo-img" src={rc} alt="" />
+        <div className="app-name b-500 primaryColor">Random Chat</div>
       </header>
 
       <div className="chat-system">
@@ -224,10 +248,12 @@ function App() {
               updateMessage={updateMessage}
               sendMessage={sendMessage}
               server={server}
+              setMedia={setMedia}
               sortName={sortName}
               username={state.name}
               receiver={state.friend}
               onChatClose={onChatClose}
+              media={media}
             />
 
           }
