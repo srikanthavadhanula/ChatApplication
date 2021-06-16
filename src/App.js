@@ -5,7 +5,7 @@ import { Chat } from './components/Chat';
 import logo from "./assets/chat.png";
 import rc from './assets/rc.PNG';
 
-const socket = io(`http://localhost:7000`);
+const socket = io(`https://random-chat-application.herokuapp.com/`);
 function App() {
 
   const [state, setState] = useState({
